@@ -19,29 +19,6 @@ import java.util.Arrays;
  */
 public class VectorAnalysis {
 
-
-    public static void main(String[] args) {
-        VectorAnalysis vectorAnalysis = new VectorAnalysis();
-        vectorAnalysis.add("hello");
-        vectorAnalysis.add("world");
-        vectorAnalysis.add("hi");
-        vectorAnalysis.add("earth");
-
-//        System.out.println(vectorAnalysis.remove(1)); // 移除后，返回移除元素
-        System.out.println(vectorAnalysis.size());
-        for (int i = 0; i < vectorAnalysis.size(); i++) {
-            String s = vectorAnalysis.get(i);
-            System.out.println("数组元素 >>>" + s);
-        }
-
-        String[] strings = {"hello", "world", "hi", "earth"};
-        String[] strings1 = new String[5];
-        System.arraycopy(strings, 0, strings1, 0, 5 - 1); // [hello, world, hi, earth, null]
-//        System.arraycopy(strings, 0, strings1, 0, 4 - 1); // [hello, world, hi, null, null]
-//        System.arraycopy(strings, 0, strings1, 2, 4 - 1); // [null, null, hello, world, hi]
-        System.out.println(">>>" + Arrays.toString(strings1));
-    }
-
     /*    Field    */
     private static final int DEFAULT_CAPACITY = 10;
     private String[] strings;
@@ -78,9 +55,7 @@ public class VectorAnalysis {
 
 
     public String get(int index) {
-        if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException(index);
-        }
+        rangeCheck(index);
         return strings[index];
     }
 
@@ -93,13 +68,9 @@ public class VectorAnalysis {
     }
 
     public String remove(int index) {
-        if (index >= size) {
-            System.out.println("error");
-            System.exit(0);
-        }
-
+        // 检查数组下标
+        rangeCheck(index);
         String s = strings[index];
-
         // 删除数组，index + 1 开始复制，
         System.arraycopy(strings, index + 1, strings, index, size - index - 1);
         strings[size - 1] = null;
@@ -108,14 +79,44 @@ public class VectorAnalysis {
     }
 
     public String set(int index, String element) {
-        if (index >= size) {
-            System.out.println("error");
-            System.exit(0);
-        }
-
+        rangeCheck(index);
         String s = strings[index];
         strings[index] = element;
         return s;
     }
+
+    // 检测数组下标越界
+    private void rangeCheck(int index) {
+        if (index < 0 || index > size) {
+            try {
+                throw new Exception("ArrayIndexOfBondsException !");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
+class Client {
+    public static void main(String[] args) {
+        VectorAnalysis vectorAnalysis = new VectorAnalysis();
+        vectorAnalysis.add("hello");
+        vectorAnalysis.add("world");
+        vectorAnalysis.add("hi");
+        vectorAnalysis.add("earth");
+
+//        System.out.println(vectorAnalysis.remove(1)); // 移除后，返回移除元素
+        System.out.println(vectorAnalysis.size());
+        for (int i = 0; i < vectorAnalysis.size(); i++) {
+            String s = vectorAnalysis.get(i);
+            System.out.println("数组元素 >>>" + s);
+        }
+
+        String[] strings = {"hello", "world", "hi", "earth"};
+        String[] strings1 = new String[5];
+        System.arraycopy(strings, 0, strings1, 0, 5 - 1); // [hello, world, hi, earth, null]
+//        System.arraycopy(strings, 0, strings1, 0, 4 - 1); // [hello, world, hi, null, null]
+//        System.arraycopy(strings, 0, strings1, 2, 4 - 1); // [null, null, hello, world, hi]
+        System.out.println(">>>" + Arrays.toString(strings1));
+    }
+}

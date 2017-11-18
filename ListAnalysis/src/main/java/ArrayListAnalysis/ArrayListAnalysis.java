@@ -1,11 +1,27 @@
 package ArrayListAnalysis;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Created by bonismo@hotmail.com
  * 下午11:56 on 17/11/18.
  * <p>
  * 数组模拟 ArrayList
  * 类似 Vector，只是更改了扩容比例，没有在无参构造中加入 capacity 初始值
+ * <p>
+ * ArrayList
+ * 1.线性数据结构，底层由数组实现，等价于动态数组。具有下标索引，默认添加元素到末尾。
+ * 2.扩容，每次扩容为原容量*3/2+1。
+ * 3.复制，原数组重新拷贝一份到新的数组中。操作代价比较高。如果预知保存元素多少时，尽量指定其容量，避免数组扩容发生。
+ *
+ * 并发处理 ---
+ * 无论直接迭代，还是 JDK1.5 以后的 for-each 循环，对容器进行迭代的标准方式都是 Iterator。
+ * 然后其他线程并发修改容器，即使使用迭代器也无法避免在迭代期间对容器加锁，是快速-失败 fast-failed。
+ * 容器在迭代过程中被修改，会抛出 ConcurrentModificationException 异常。
+ *
+ * 使用 CopyOnWriterArrayList 可以解决并发问题。适合在读多-写少的场景中使用，比如缓存。
+ * 该类不存在扩容，每次写操作都是加锁，拷贝一个副本，在副本基础上修改。因此过多的写入操作不建议使用该数据结构。开销很大。
  */
 public class ArrayListAnalysis {
 
@@ -85,11 +101,11 @@ public class ArrayListAnalysis {
         return oldValue;
     }
 
-    // 数组的扩容与数组拷贝
+    // 数组的扩容与数组拷贝,扩容时 原始容量 * 3 / 2 + 1
     private void ensureCapacity() {
         System.out.println(elementData.length);
         if (size == elementData.length) {
-            Object[] newArray = new Object[size * 2 + 1];
+            Object[] newArray = new Object[(size * 3) / 2 + 1];
             System.arraycopy(elementData, 0, newArray, 0, elementData.length);
             elementData = newArray;
         }
