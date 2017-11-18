@@ -42,16 +42,19 @@ public class VectorAnalysis {
         System.out.println(">>>" + Arrays.toString(strings1));
     }
 
+    /*    Field    */
     private static final int DEFAULT_CAPACITY = 10;
     private String[] strings;
     private int capacity;
     private int size;
 
+    /* 初始容量  */
     public VectorAnalysis() {
         strings = new String[DEFAULT_CAPACITY];
         capacity = DEFAULT_CAPACITY;
     }
 
+    /* 设置容量  */
     public VectorAnalysis(int initialCapacity) {
         strings = new String[initialCapacity];
         capacity = initialCapacity;
