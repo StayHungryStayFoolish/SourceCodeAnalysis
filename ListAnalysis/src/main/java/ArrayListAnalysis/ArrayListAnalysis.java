@@ -1,18 +1,16 @@
 package ArrayListAnalysis;
 
-import java.util.ArrayList;
-
 /**
  * Created by bonismo@hotmail.com
  * 下午11:56 on 17/11/18.
+ * <p>
+ * 数组模拟 ArrayList
+ * 类似 Vector，只是更改了扩容比例，没有在无参构造中加入 capacity 初始值
  */
 public class ArrayListAnalysis {
 
     // 数组
     private Object[] elementData;
-
-    // 容量
-    private int capacity;
 
     // 长度
     private int size;

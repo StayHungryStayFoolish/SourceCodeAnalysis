@@ -12,7 +12,7 @@ import java.util.Arrays;
  * 1、设置初始容量 10 、数组、容量、向量大小
  * 2、创建有参、无参构造器。 无参默认容量、有参设置容量
  * 3、添加元素，利用 System.arraycopy();
- * System.arrcopy(Object src,int srcPos, object dest, int destPos,int length);
+ * System.arraycopy(Object src,int srcPos, object dest, int destPos,int length);
  * src 源数组， srcPos 起始位置， dest 目标数组，destPos 目标位置，length 复制的长度
  * 复制数组。从指定源数组，复制一个
  * 4、删除元素，remove ，System.arraycopy(); 复制数组
@@ -66,7 +66,7 @@ public class VectorAnalysis {
             String[] newStrings = new String[capacity * 2];
             capacity *= 2;
 
-            // System.arrcopy(Object src,int srcPos, object dest, int destPos,int length);
+            // System.arraycopy(Object src,int srcPos, object dest, int destPos,int length);
             // src 源数组， srcPos 起始位置， dest 目标数组，destPos 目标位置，length 复制的长度
             // 复制数组。从指定源数组，复制一个
             System.arraycopy(strings, 0, newStrings, 0, strings.length);
