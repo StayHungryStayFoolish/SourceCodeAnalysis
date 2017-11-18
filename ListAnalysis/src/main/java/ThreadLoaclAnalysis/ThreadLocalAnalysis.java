@@ -27,7 +27,10 @@ package ThreadLoaclAnalysis;
  * ThreadLocal 和 synchronized 区别
  * 1. ThreadLocal 是一个 Java 类，通过对当前线程中的局部变量拷贝来解决不同线程变量访问的冲突问题。ThreadLocal 提供了线程安全的共享机制，
  *    每个线程都拥有其副本
- * 2. synchronized 是 Java 的一个保留字，依靠 JVM 的锁机制来实现临界区的函数或者变量访问的原子性
+ * 2. synchronized 是 Java 的一个保留字，依靠 JVM 的锁机制来实现临界区的函数或者变量访问的原子性。在同步机制中，通过对象的锁机制
+ *    保证同一时间只有一个线程访问变量。此时，用用作 "锁机制" 的变量是多个线程共享的。但是线程访问不能同时进行。
+ * 3. ThreadLocal 是 "空间换时间"，拷贝变量给每个线程。同时间多线程访问。
+ *    synchronized 是 "时间换空间"，通过锁机制，同一时间只能有一个线程访问。
  */
 public class ThreadLocalAnalysis {
 }
