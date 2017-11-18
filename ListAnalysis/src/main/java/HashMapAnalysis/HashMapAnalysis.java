@@ -80,6 +80,60 @@ import java.util.*;
  * <p>
  * 5.如果不是红黑树，则证明是单链表。遍历单链表，逐一比较链表结点，链表结点的key的hash值 和 要获取的key的hash值相等，
  * 并且 链表结点的key本身 和要获取的 key 相等，则返回该结点，遍历结束仍未找到对应key的结点，则返回null。
+ * <p>
+ * hash 冲突:
+ * 当调用 put(K key,V value) 操作添加 k-v 键值对是，存储位置是通过扰动函数计算的。
+ * 扰动函数  (key == null)?0:(h = key.hashCode())^(h>>>16)
+ * 当计算出相同存放位置时，此现象就是 hash 冲突或者 hash 碰撞
+ * <p>
+ * HashMap 的容量必须是 2 的 n 次方
+ * 1.调用 put(); 元素位置时 key 的 hash 值 % 哈希表 Node<K,V>[] table 计算的。通过委员算 h&(length-1)获取位置。
+ * 只有 length 长度是 2 的 n 次方时，h&(length - 1) 等价于 h % length
+ * <p>
+ * 2.数组长度为2的 n 次幂是，不同 key 计算出 index 相同几率较小。数组分布比较均匀，也就是碰撞几率小。
+ * <p>
+ * 负载因子
+ * 1.负载因子表示哈希表空间的使用程度。
+ * 2.因子越大，装在程度越高，容纳更多元素，hash 碰撞几率会加大，链表加长，查询效率降低。
+ * 3.因子越小，链表数据量稀疏，空间会浪费，但是查询效率高。
+ * <p>
+ * HashMap 和 Hashtable 区别
+ * 1）容器整体结构：
+ * <p>
+ * HashMap的key和value都允许为null，HashMap遇到key为null的时候，调用putForNullKey方法进行处理，而对value没有处理。
+ * <p>
+ * Hashtable的key和value都不允许为null。Hashtable遇到null，直接返回NullPointerException。
+ * <p>
+ * <p>
+ * 2） 容量设定与扩容机制：
+ * <p>
+ * HashMap默认初始化容量为 16，并且容器容量一定是2的n次方，扩容时，是以原容量 2倍 的方式 进行扩容。
+ * <p>
+ * Hashtable默认初始化容量为 11，扩容时，是以原容量 2倍 再加 1的方式进行扩容。即int newCapacity = (oldCapacity << 1) + 1;。
+ * <p>
+ * <p>
+ * 3） 散列分布方式（计算存储位置）：
+ * <p>
+ * HashMap是先将key键的hashCode经过扰动函数扰动后得到hash值，然后再利用 hash & (length - 1)的方式代替取模，得到元素的存储位置。
+ * <p>
+ * Hashtable则是除留余数法进行计算存储位置的（因为其默认容量也不是2的n次方。所以也无法用位运算替代模运算），int index = (hash & 0x7FFFFFFF) % tab.length;。
+ * <p>
+ * 由于HashMap的容器容量一定是2的n次方，所以能使用hash & (length - 1)的方式代替取模的方式计算元素的位置提高运算效率，但Hashtable的容器容量不一定是2的n次方，所以不能使用此运算方式代替。
+ * <p>
+ * <p>
+ * 4）线程安全（最重要）：
+ * <p>
+ * HashMap 不是线程安全，如果想线程安全，可以通过调用synchronizedMap(Map<K,V> m)使其线程安全。但是使用时的运行效率会下降，所以建议使用ConcurrentHashMap容器以此达到线程安全。
+ * <p>
+ * Hashtable则是线程安全的，每个操作方法前都有synchronized修饰使其同步，但运行效率也不高，所以还是建议使用ConcurrentHashMap容器以此达到线程安全。
+ * <p>
+ * 因此，Hashtable是一个遗留容器，如果我们不需要线程同步，则建议使用HashMap，如果需要线程同步，则建议使用ConcurrentHashMap。
+ * 此处不再对Hashtable的源码进行逐一分析了，如果想深入了解的同学，可以参考此文章Hashtable源码剖析
+ *
+ * HashMap 在多线程下是不安全的，可以考虑使用 ConcurrentHashMap 代替
+ * 1.由于 HashMap 的扩容机制，当 HashMap 调用 resize() 进行自动扩容时，可能导致死循环。
+ *
+ * HashMap 的 Key 尽量使用不可变对象，如果选用可变对象作为 Key 是，可能会造成数据丢失，因为 hash&(length - 1)运算时，位置可能已经发生改变。
  */
 public class HashMapAnalysis {
     public static void main(String[] args) {
