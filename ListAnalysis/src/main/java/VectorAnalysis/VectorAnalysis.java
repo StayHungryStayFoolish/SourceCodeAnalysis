@@ -37,8 +37,8 @@ public class VectorAnalysis {
         String[] strings = {"hello", "world", "hi", "earth"};
         String[] strings1 = new String[5];
         System.arraycopy(strings, 0, strings1, 0, 5 - 1); // [hello, world, hi, earth, null]
-        System.arraycopy(strings, 0, strings1, 0, 4 - 1); // [hello, world, hi, null, null]
-        System.arraycopy(strings, 0, strings1, 2, 4 - 1); // [null, null, hello, world, hi]
+//        System.arraycopy(strings, 0, strings1, 0, 4 - 1); // [hello, world, hi, null, null]
+//        System.arraycopy(strings, 0, strings1, 2, 4 - 1); // [null, null, hello, world, hi]
         System.out.println(">>>" + Arrays.toString(strings1));
     }
 
