@@ -79,13 +79,13 @@ public class ArrayListAnalysis {
         }
     }
 
-        // 更改索引处元素值，返回旧元素
-        public Object set ( int index, Object o){
-            rangeCheck(index);
-            Object oldValue = elementData[index];
-            elementData[index] = 0;
-            return oldValue;
-        }
+    // 更改索引处元素值，返回旧元素
+    public Object set(int index, Object o) {
+        rangeCheck(index);
+        Object oldValue = elementData[index];
+        elementData[index] = 0;
+        return oldValue;
+    }
 
     // 数组的扩容与数组拷贝
     private void ensureCapacity() {
@@ -132,8 +132,8 @@ class Client {
         analysis.add("1");
         analysis.add("1");
         analysis.add("1");
-        System.out.println("size >>>"+analysis.size());
+        System.out.println("size >>>" + analysis.size());
         analysis.remove(1);
-        System.out.println("size >>>"+analysis.size());
+        System.out.println("size >>>" + analysis.size());
     }
 }
