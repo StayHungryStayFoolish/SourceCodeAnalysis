@@ -1,14 +1,30 @@
 package IteratorAnalysis;
 
-import javax.sound.midi.Soundbank;
+import java.util.PrimitiveIterator;
 
 /**
  * Created by bonismo@hotmail.com
  * 上午2:31 on 17/11/19.
  * <p>
  * Iterator 的模拟，其实就是工程方法的设计模式
+ *
+ * Iterator 使用工程方法设计模式，将不同类型的集合类的方法抽象出来（hasNext, next）
+ * 从而避免了向客户端暴露内部结构。
+ *
+ * 快速失败 fast-fail 机制
+ * 出现场景：
+ * 当使用 Iterator 进行迭代操作的同时，又去调用了 ArrayList/LinkedList 等集合时，比如使用 remove()、set()、方法，此时
+ * elementData 数组的元素会发生变化，而迭代器此时正在通过了 hasNext 方法判断，正在调用 next 方法，最后去到的值却已经被修改过了，
+ * 不是最初的期望值（原值）。从而造成数据污染（数据不一致）。 List 内部有一个 int transient modCount 变量，用来记录结构修改次数，
+ * 初始值为0，Iterator 内部有一个 int transient expectedModCount 用来和 List 的 modCount 比较，当相等时，继续迭代。
+ * 如果 List 自身结构发生变化，modCount 值改变，不等于 expectedModCount 。也就是迭代过程中检测到 modCount！=expectedModCount，说明
+ * 结构变化，不需要继续迭代元素，抛出 ConcurrentModificationException 异常，终止迭代操作。这就是快速失败机制 fast-fail 。
+ *
+ * 是 Java 的一种错误检测机制。这种机制有可能触发，并不是一定。因为只有通过 hasNext，正在调用 next 时，才会触发。
+ *
  */
 public class IteratorAnalysis {
+
     public static void main(String[] args) {
         // 因为当前类自定义的 List，所有以 Package 形式引入 JDK 的 List
         // 比较 for 循环和 Iterator 的区别
