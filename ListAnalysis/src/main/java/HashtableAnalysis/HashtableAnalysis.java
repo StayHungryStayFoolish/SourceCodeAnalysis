@@ -153,4 +153,19 @@ protected void rehash() {
     // Hashtable 的 hash 值没有使用扰动处理。解决 hash 冲突使用的 Hashtable 的索引求值公式：
     // ((hashSeed ^ k.hashCode()) & 0x7FFFFFFF) % newCapacity
      */
+
+    /* ------- get() ----------- */
+    /*
+    public synchronized V get(Object key) {//没有什么特殊性，就是加了一个synchronized，就是根据index来遍历索引处的单链表。
+        Entry tab[] = table;
+        int hash = hash(key);
+        int index = (hash & 0x7FFFFFFF) % tab.length;
+        for (Entry<K,V> e = tab[index] ; e != null ; e = e.next) {
+            if ((e.hash == hash) && e.key.equals(key)) {
+                return e.value;
+            }
+        }
+        return null;
+    }
+     */
 }
