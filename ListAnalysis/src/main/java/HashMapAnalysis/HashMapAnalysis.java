@@ -186,6 +186,19 @@ import java.util.*;
             }
         }
  }
+
+ 关键 diamante： while 循环
+ 1. Entry<K,V> next = e.next;
+    是单链表，如果转移头指针，一点要保存下一个节点，不然转移后链表就丢失了。
+ 2. e.next = newTable[i];
+    元素 e 要插入链表头部，所以先用 e.next 指向 hash 表的第一个元素。
+ 3. newTable[i] = e;
+    新 hash 表的头指针仍然指向 e 没转移前的第一个元素，所以需要新 hash 表头指针指向 e
+ 4. e = next;
+    转移 e 的下一个节点
+
+ 假设两个线程通知对当前 HashMap 进行 put 操作，并进入 transfer() 环节，会出现环形链表。
+
  *
  * HashMap 的 Key 尽量使用不可变对象，如果选用可变对象作为 Key 是，可能会造成数据丢失，因为 hash&(length - 1)运算时，位置可能已经发生改变。
  */
