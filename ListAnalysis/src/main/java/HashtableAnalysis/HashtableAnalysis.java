@@ -5,7 +5,7 @@ package HashtableAnalysis;
  * 下午2:06 on 17/11/19.
  *
  * Hashtable 与 HashMap 区别
- * 1.键值对
+ * 1.容器结构
  *   - Hashtable 不允许 key/value 为 null，遇到 null 时，会返回 NullPointerException
  *   - HashMap 允许 key/value 为 null。且只有一个 key 为 null
  * 2.线程安全
@@ -18,7 +18,7 @@ package HashtableAnalysis;
  * 4.默认初始容量
  *   - Hashtable 初始容量是11，采用质数，扩容方式采用 old*2+1 ，根据 hash 算法，使得内部 hash 表散列更加均匀，减少 hash 冲突（碰撞几率）
  *   - HashMap 初始容量是16，采用 2 的 n 次方。
- * 5.存储位置计算方法
+ * 5.Hash 散列存储位置计算方法
  *   - Hashtable 采用的除留余数法计算，即 int index = (hash & 0x7FFFFFFF) % tab.length;
  *   - HashMap 采用的是 hash & (length - 1) 运算，来代替 求模运算（key 的 hash 值，当前 hash 表的长途） hash值 % hash 表长度，
  *     运算效率更高
