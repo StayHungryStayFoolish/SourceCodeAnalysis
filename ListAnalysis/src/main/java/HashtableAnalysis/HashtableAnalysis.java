@@ -20,6 +20,7 @@ package HashtableAnalysis;
  *   - HashMap 初始容量是16，采用 2 的 n 次方。
  * 5.Hash 散列存储位置计算方法
  *   - Hashtable 采用的除留余数法计算，即 int index = (hash & 0x7FFFFFFF) % tab.length;
+ *     奇数保证了散列的更均匀，减少 hash 碰撞的几率。
  *   - HashMap 采用的是 hash & (length - 1) 运算，来代替 求模运算（key 的 hash 值，当前 hash 表的长途） hash值 % hash 表长度，
  *     运算效率更高
  *
