@@ -41,9 +41,116 @@ public class HashtableAnalysis {
         Hashtable<String, String> table3 = new Hashtable<>(map);
         table.put("T1", "1");
         table.put("T2", "2");
-        table.put(null, "3"); // java.lang.NullPointerException Hashtable 遇到 null，抛出 NPE
+//        table.put(null, "3"); // java.lang.NullPointerException Hashtable 遇到 null，抛出 NPE
         System.out.println();
         System.out.println(table.toString());
 
     }
+
+    /* ---------- 源码分析 ----------   */
+    /*  域和构造函数
+    private transient Entry<?,?>[] table;//数组
+    private transient int count;//键值对的数量
+    private int threshold;//阀值
+    private float loadFactor;//加载因子
+    private transient int modCount = 0;//修改次数
+    public Hashtable(int initialCapacity, float loadFactor) {//下面的三个构造函数都是调用这个函数，来进行相关的初始化
+        if (initialCapacity < 0)
+            throw new IllegalArgumentException("Illegal Capacity: "+
+                    initialCapacity);
+        if (loadFactor <= 0 || Float.isNaN(loadFactor))
+            throw new IllegalArgumentException("Illegal Load: "+loadFactor);
+
+        if (initialCapacity==0)
+            initialCapacity = 1;
+        this.loadFactor = loadFactor;
+        table = new Entry[initialCapacity];//这里是与HashMap的区别之一，HashMap中table  对 hash 表进行了初始化
+        threshold = (int)Math.min(initialCapacity * loadFactor, MAX_ARRAY_SIZE + 1);
+        initHashSeedAsNeeded(initialCapacity);
+    }
+
+    public Hashtable(int initialCapacity) {//指定初始数组长度
+        this(initialCapacity, 0.75f);
+    }
+
+    public Hashtable() {//从这里可以看出容量的默认值为11，加载因子为0.75f.
+        this(11, 0.75f);
+    }
+
+    public Hashtable(Map<? extends K, ? extends V> t) {
+        this(Math.max(2*t.size(), 11), 0.75f);
+        putAll(t);
+    }
+    */
+
+
+    /* ------- put 方法 -------------- */
+    /*
+    public synchronized V put(K key, V value) {//这里方法修饰符为synchronized,所以是线程安全的。
+        if (value == null) {
+            throw new NullPointerException();//value如果为Null,抛出异常
+        }
+        Entry tab[] = table;
+        int hash = hash(key);//hash里面的代码是hashSeed^key.hashcode（）,null.hashCode（）会抛出异常，所以这就解释了Hashtable的key和value不能为null的原因。
+        int index = (hash & 0x7FFFFFFF) % tab.length;//获取数组元素下标,先对hash值取正，然后取余。
+        for (Entry<K,V> e = tab[index] ; e != null ; e = e.next) {
+            if ((e.hash == hash) && e.key.equals(key)) {
+                V old = e.value;
+                e.value = value;
+                return old;
+            }
+        }
+
+        modCount++;//修改次数。
+        if (count >= threshold) {//键值对的总数大于其阀值
+            rehash();//在rehash里进行扩容处理
+
+            tab = table;
+            hash = hash(key);
+            index = (hash & 0x7FFFFFFF) % tab.length;
+        }
+        Entry<K,V> e = tab[index];
+        tab[index] = new Entry<>(hash, key, value, e);
+        count++;
+        return null;
+    }
+private int hash(Object k) {
+        // hashSeed will be zero if alternative hashing is disabled.
+        return hashSeed ^ k.hashCode();//在1.8的版本中，hash就直接为k.hashCode了。
+    }
+protected void rehash() {
+        int oldCapacity = table.length;
+        Entry<K,V>[] oldMap = table;
+        int newCapacity = (oldCapacity << 1) + 1;//扩容，如果默认值是11，则扩容之后，数组的长度为23
+        if (newCapacity - MAX_ARRAY_SIZE > 0) {//这里的最大值和HashMap里的最大值不同，这里Max_ARRAY_SIZE的是因为有些虚拟机实现会限制数组的最大长度。
+            if (oldCapacity == MAX_ARRAY_SIZE)
+                // Keep running with MAX_ARRAY_SIZE buckets
+                return;
+            newCapacity = MAX_ARRAY_SIZE;
+        }
+        Entry<K,V>[] newMap = new Entry[newCapacity];
+
+        modCount++;
+        threshold = (int)Math.min(newCapacity * loadFactor, MAX_ARRAY_SIZE + 1);
+        boolean rehash = initHashSeedAsNeeded(newCapacity);
+
+        table = newMap;
+        for (int i = oldCapacity ; i-- > 0 ;) {//迁移键值对
+            for (Entry<K,V> old = oldMap[i] ; old != null ; ) {
+                Entry<K,V> e = old;
+                old = old.next;
+
+                if (rehash) {
+                    e.hash = hash(e.key);
+                }
+                int index = (e.hash & 0x7FFFFFFF) % newCapacity;  // e.hash & 0x7FFFFFFF 是为了保证正数
+                e.next = newMap[index];
+                newMap[index] = e;
+            }
+        }
+    }
+
+    // Hashtable 的 hash 值没有使用扰动处理。解决 hash 冲突使用的 Hashtable 的索引求值公式：
+    // ((hashSeed ^ k.hashCode()) & 0x7FFFFFFF) % newCapacity
+     */
 }
