@@ -144,7 +144,48 @@ import java.util.*;
  * 此处不再对Hashtable的源码进行逐一分析了，如果想深入了解的同学，可以参考此文章Hashtable源码剖析
  *
  * HashMap 在多线程下是不安全的，可以考虑使用 ConcurrentHashMap 代替
- * 1.由于 HashMap 的扩容机制，当 HashMap 调用 resize() 进行自动扩容时，可能导致死循环。
+ * 由于 HashMap 的扩容机制，当 HashMap 调用 resize() 进行自动扩容时，可能导致死循环。
+ *
+ * resize 死循环
+ * 超过 threshold ，需要扩容。Hash 表中所有元素都需要重新算一遍。这叫 rehash。
+ * transfer
+ * 1. 对索引数组元素遍历
+ * 2. 对链表每个节点遍历：用 next 取得转移元素的下一个，将 e 转移到新  hash 表的头部，使用头插法插入节点
+ * 3. 循环2，直到链表节点全部转移
+ * 4. 循环1，知道所有数组的索引全部转移
+ *
+ * 原因： transfer() 函数
+ * 转移过程是逆序的，如：链表 1->2->3，转移后是3->2>->1 。思索问题就是 1->2 的同时，2->1 造成的。
+
+ void resize(int newCapacity) {
+        Entry[] oldTable = table;
+        int oldCapacity = oldTable.length;
+        if (oldCapacity == MAXIMUM_CAPACITY) {
+            threshold = Integer.MAX_VALUE;
+            return;
+        }
+
+        Entry[] newTable = new Entry[newCapacity];
+        transfer(newTable, initHashSeedAsNeeded(newCapacity));
+        table = newTable;
+        threshold = (int)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + 1);
+ }
+
+ void transfer(Entry[] newTable, boolean rehash) {
+        int newCapacity = newTable.length;
+        for (Entry<K,V> e : table) {
+            while(null != e) {
+                Entry<K,V> next = e.next;
+                if (rehash) {
+                    e.hash = null == e.key ? 0 : hash(e.key);
+                }
+                int i = indexFor(e.hash, newCapacity);
+                e.next = newTable[i];  // 逆序
+                newTable[i] = e;
+                e = next;
+            }
+        }
+ }
  *
  * HashMap 的 Key 尽量使用不可变对象，如果选用可变对象作为 Key 是，可能会造成数据丢失，因为 hash&(length - 1)运算时，位置可能已经发生改变。
  */
